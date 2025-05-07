@@ -1,6 +1,7 @@
 package com.mercadona.mercadona_caducados.infrastructure.controller;
 
 import com.mercadona.mercadona_caducados.application.TornilloService;
+import com.mercadona.mercadona_caducados.domain.dto.TornilloConProductoDTO;
 import com.mercadona.mercadona_caducados.domain.model.Tornillo;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,5 +57,15 @@ public class TornilloController {
     ) {
         return tornilloService.obtenerModulosPorTiendaYFamilia(tiendaId, familia);
     }
+
+    @GetMapping("/dto/tienda/{tiendaId}/familia/{familia}/modulo/{nombreModulo}")
+    public List<TornilloConProductoDTO> obtenerDTO(
+            @PathVariable int tiendaId,
+            @PathVariable String familia,
+            @PathVariable String nombreModulo
+    ) {
+        return tornilloService.obtenerDTOPorTiendaFamiliaYModulo(tiendaId, familia, nombreModulo);
+    }
+
 
 }

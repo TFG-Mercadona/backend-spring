@@ -2,6 +2,7 @@ package com.mercadona.mercadona_caducados.infrastructure.persistence;
 
 import com.mercadona.mercadona_caducados.domain.model.Tornillo;
 import com.mercadona.mercadona_caducados.domain.repository.TornilloRepository;
+import com.mercadona.mercadona_caducados.domain.dto.TornilloConProductoDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -55,5 +56,11 @@ public class JpaTornilloRepository implements TornilloRepository {
     public List<String> obtenerModulosPorTiendaYFamilia(int tiendaId, String familia) {
         return springRepo.findDistinctNombreModuloByTiendaIdAndFamilia(tiendaId, familia);
     }
+
+    @Override
+    public List<TornilloConProductoDTO> findDTOByTiendaIdAndFamiliaAndNombreModulo(int tiendaId, String familia, String nombreModulo) {
+        return springRepo.findDTOByTiendaIdAndFamiliaAndNombreModulo(tiendaId, familia, nombreModulo);
+    }
+
 
 }

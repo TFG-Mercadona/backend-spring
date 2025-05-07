@@ -2,6 +2,7 @@ package com.mercadona.mercadona_caducados.application;
 
 import com.mercadona.mercadona_caducados.domain.model.Tornillo;
 import com.mercadona.mercadona_caducados.domain.repository.TornilloRepository;
+import com.mercadona.mercadona_caducados.domain.dto.TornilloConProductoDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,4 +53,7 @@ public class TornilloService {
         }
     }
 
+    public List<TornilloConProductoDTO> obtenerDTOPorTiendaFamiliaYModulo(int tiendaId, String familia, String nombreModulo) {
+        return tornilloRepository.findDTOByTiendaIdAndFamiliaAndNombreModulo(tiendaId, familia, nombreModulo);
+    }
 }

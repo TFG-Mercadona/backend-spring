@@ -1,6 +1,7 @@
 package com.mercadona.mercadona_caducados.infrastructure.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import com.mercadona.mercadona_caducados.domain.dto.TornilloConProductoDTO;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -40,4 +41,23 @@ public interface SpringDataTornilloRepository extends JpaRepository<TornilloEnti
         @Param("tiendaId") Integer tiendaId,
         @Param("familia") String familia
     );
+
+    @Query("""
+        SELECT new com.mercadona.mercadona_caducados.domain.dto.TornilloConProductoDTO(
+            t.id, t.productoCodigo, t.tiendaId, 
+            CAST(t.fechaCaducidad AS string), CAST(t.fechaRetirada AS string), 
+            t.nombreModulo, t.fila, t.columna, 
+            p.nombre, p.imagenUrl
+        )
+        FROM TornilloEntity t
+        JOIN ProductoEntity p ON t.productoCodigo = p.codigo
+        WHERE t.tiendaId = :tiendaId AND p.familia = :familia AND t.nombreModulo = :nombreModulo
+    """)
+    List<TornilloConProductoDTO> findDTOByTiendaIdAndFamiliaAndNombreModulo(
+        @Param("tiendaId") Integer tiendaId,
+        @Param("familia") String familia,
+        @Param("nombreModulo") String nombreModulo
+    );
+
+
 }

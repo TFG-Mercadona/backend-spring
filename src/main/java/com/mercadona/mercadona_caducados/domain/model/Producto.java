@@ -1,7 +1,7 @@
 package com.mercadona.mercadona_caducados.domain.model;
 
 public class Producto {
-    private static final String IMAGEN_POR_DEFECTO = "/images/productos/notFound.jpg";
+    private static final String IMAGEN_POR_DEFECTO = "/images/productos/imageNotFound.jpg";
 
     private final int codigo;
     private final String nombre;

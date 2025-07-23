@@ -1,7 +1,7 @@
 package com.mercadona.mercadona_caducados.infrastructure.controller;
 
 import com.mercadona.mercadona_caducados.application.TornilloService;
-import com.mercadona.mercadona_caducados.domain.dto.TornilloConProductoDTO;
+import com.mercadona.mercadona_caducados.application.dto.TornilloConProductoDTO;
 import com.mercadona.mercadona_caducados.domain.model.Tornillo;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package com.mercadona.mercadona_caducados.domain.dto;
+package com.mercadona.mercadona_caducados.application.dto;
 
 public class TornilloConProductoDTO {
     public Long id;

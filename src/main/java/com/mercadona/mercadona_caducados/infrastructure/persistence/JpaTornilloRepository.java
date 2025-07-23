@@ -1,8 +1,9 @@
 package com.mercadona.mercadona_caducados.infrastructure.persistence;
 
+import com.mercadona.mercadona_caducados.application.dto.TornilloConProductoDTO;
 import com.mercadona.mercadona_caducados.domain.model.Tornillo;
 import com.mercadona.mercadona_caducados.domain.repository.TornilloRepository;
-import com.mercadona.mercadona_caducados.domain.dto.TornilloConProductoDTO;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

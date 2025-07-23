@@ -1,7 +1,7 @@
 package com.mercadona.mercadona_caducados.domain.repository;
 
+import com.mercadona.mercadona_caducados.application.dto.TornilloConProductoDTO;
 import com.mercadona.mercadona_caducados.domain.model.Tornillo;
-import com.mercadona.mercadona_caducados.domain.dto.TornilloConProductoDTO;
 
 import java.util.List;
 import java.util.Optional;

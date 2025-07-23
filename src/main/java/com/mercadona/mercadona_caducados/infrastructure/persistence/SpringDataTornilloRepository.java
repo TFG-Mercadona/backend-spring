@@ -1,9 +1,10 @@
 package com.mercadona.mercadona_caducados.infrastructure.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.mercadona.mercadona_caducados.domain.dto.TornilloConProductoDTO;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import com.mercadona.mercadona_caducados.application.dto.TornilloConProductoDTO;
 
 import java.util.List;
 
@@ -43,7 +44,7 @@ public interface SpringDataTornilloRepository extends JpaRepository<TornilloEnti
     );
 
     @Query("""
-        SELECT new com.mercadona.mercadona_caducados.domain.dto.TornilloConProductoDTO(
+        SELECT new com.mercadona.mercadona_caducados.application.dto.TornilloConProductoDTO(
             t.id, t.productoCodigo, t.tiendaId, 
             CAST(t.fechaCaducidad AS string), CAST(t.fechaRetirada AS string), 
             t.nombreModulo, t.fila, t.columna, 

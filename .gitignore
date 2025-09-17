@@ -36,3 +36,4 @@ out/
 ### VS Code ###
 .vscode/
 src/main/java/com/mercadona/mercadona_caducados/utils/PasswordHasher.java
+src/main/resources/application.properties

@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import com.mercadona.mercadona_caducados.application.dto.TornilloConProductoDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SpringDataTornilloRepository extends JpaRepository<TornilloEntity, Long> {
 
@@ -58,6 +59,26 @@ public interface SpringDataTornilloRepository extends JpaRepository<TornilloEnti
         @Param("tiendaId") Integer tiendaId,
         @Param("familia") String familia,
         @Param("nombreModulo") String nombreModulo
+    );
+
+    // 1) Entidad (por si la necesitas en otras capas)
+    Optional<TornilloEntity> findByTiendaIdAndProductoCodigo(Integer tiendaId, Integer productoCodigo);
+
+    // 2) DTO (join con producto) por tienda + producto
+    @Query("""
+        SELECT new com.mercadona.mercadona_caducados.application.dto.TornilloConProductoDTO(
+            t.id, t.productoCodigo, t.tiendaId,
+            CAST(t.fechaCaducidad AS string), CAST(t.fechaRetirada AS string),
+            t.nombreModulo, t.fila, t.columna,
+            p.nombre, p.imagenUrl
+        )
+        FROM TornilloEntity t
+        JOIN ProductoEntity p ON t.productoCodigo = p.codigo
+        WHERE t.tiendaId = :tiendaId AND t.productoCodigo = :productoCodigo
+    """)
+    Optional<TornilloConProductoDTO> findDTOByTiendaIdAndProductoCodigo(
+        @Param("tiendaId") Integer tiendaId,
+        @Param("productoCodigo") Integer productoCodigo
     );
 
 

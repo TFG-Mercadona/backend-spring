@@ -57,4 +57,9 @@ public class TornilloService {
     public List<TornilloConProductoDTO> obtenerDTOPorTiendaFamiliaYModulo(int tiendaId, String familia, String nombreModulo) {
         return tornilloRepository.findDTOByTiendaIdAndFamiliaAndNombreModulo(tiendaId, familia, nombreModulo);
     }
+
+    // Obtener un único DTO por tienda + producto
+    public Optional<TornilloConProductoDTO> obtenerDTOPorTiendaYProducto(Integer tiendaId, Integer productoCodigo) {
+         return tornilloRepository.obtenerDTOPorTiendaYProducto(tiendaId, productoCodigo);
+    }
 }

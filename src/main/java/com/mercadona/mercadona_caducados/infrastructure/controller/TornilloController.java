@@ -67,5 +67,17 @@ public class TornilloController {
         return tornilloService.obtenerDTOPorTiendaFamiliaYModulo(tiendaId, familia, nombreModulo);
     }
 
+    // Un tornillo (único) por tienda + producto, con datos de producto en el DTO ===
+    @GetMapping("/dto/tienda/{tiendaId}/producto/{productoCodigo}")
+    public TornilloConProductoDTO obtenerDTOPorTiendaYProducto(
+            @PathVariable Integer tiendaId,
+            @PathVariable Integer productoCodigo
+    ) {
+        return tornilloService
+                .obtenerDTOPorTiendaYProducto(tiendaId, productoCodigo)
+                .orElseThrow(() ->
+                        new RuntimeException("No existe tornillo para tienda " + tiendaId + " y producto " + productoCodigo));
+    }
+
 
 }

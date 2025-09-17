@@ -14,4 +14,6 @@ public interface TornilloRepository {
     List<String> obtenerModulosPorTiendaYFamilia(int tiendaId, String familia);
     Optional<Tornillo> findById(Long id);
     List<TornilloConProductoDTO> findDTOByTiendaIdAndFamiliaAndNombreModulo(int tiendaId, String familia, String nombreModulo);
+    Optional<TornilloConProductoDTO> obtenerDTOPorTiendaYProducto(Integer tiendaId, Integer productoCodigo);
+    Optional<Tornillo> obtenerPorTiendaYProducto(Integer tiendaId, Integer productoCodigo);
 }

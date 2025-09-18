@@ -4,6 +4,8 @@ import com.mercadona.mercadona_caducados.application.TornilloService;
 import com.mercadona.mercadona_caducados.application.dto.TornilloConProductoDTO;
 import com.mercadona.mercadona_caducados.domain.model.Tornillo;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -77,6 +79,26 @@ public class TornilloController {
                 .obtenerDTOPorTiendaYProducto(tiendaId, productoCodigo)
                 .orElseThrow(() ->
                         new RuntimeException("No existe tornillo para tienda " + tiendaId + " y producto " + productoCodigo));
+    }
+
+    // === NUEVO: actualizar fecha de caducidad por id ===
+    @PutMapping("/{id}/fecha-caducidad")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void actualizarFechaCaducidad(
+            @PathVariable Long id,
+            @RequestBody FechaCaducidadRequest req
+    ) {
+        if (req == null || req.getFechaCaducidad() == null) {
+            throw new IllegalArgumentException("Body requerido: { \"fechaCaducidad\": \"YYYY-MM-DD\" }");
+        }
+        tornilloService.actualizarFechaCaducidad(id, req.getFechaCaducidad());
+    }
+
+    // DTO request simple
+    public static class FechaCaducidadRequest {
+        private String fechaCaducidad;
+        public String getFechaCaducidad() { return fechaCaducidad; }
+        public void setFechaCaducidad(String fechaCaducidad) { this.fechaCaducidad = fechaCaducidad; }
     }
 
 

@@ -5,6 +5,7 @@ import com.mercadona.mercadona_caducados.domain.model.Tornillo;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
 
 public interface TornilloRepository {
     List<Tornillo> findAll();
@@ -16,4 +17,5 @@ public interface TornilloRepository {
     List<TornilloConProductoDTO> findDTOByTiendaIdAndFamiliaAndNombreModulo(int tiendaId, String familia, String nombreModulo);
     Optional<TornilloConProductoDTO> obtenerDTOPorTiendaYProducto(Integer tiendaId, Integer productoCodigo);
     Optional<Tornillo> obtenerPorTiendaYProducto(Integer tiendaId, Integer productoCodigo);
+    void updateFechaCaducidad(Long id, LocalDate nuevaFecha);
 }

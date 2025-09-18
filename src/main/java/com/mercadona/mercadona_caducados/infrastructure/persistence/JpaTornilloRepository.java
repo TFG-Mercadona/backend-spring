@@ -105,6 +105,15 @@ public class JpaTornilloRepository implements TornilloRepository {
         });
     }
 
+    @Override
+    public void updateFechaCaducidad(Long id, LocalDate nuevaFecha) {
+        TornilloEntity te = springRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tornillo no encontrado: " + id));
+        te.setFechaCaducidad(nuevaFecha);
+        // El trigger en BD recalculará fecha_retirada tras el UPDATE
+        springRepo.save(te);
+    }   
+
     private static String toYmd(LocalDate d) {
         return d != null ? d.toString() : null;
     }

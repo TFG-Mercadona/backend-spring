@@ -3,12 +3,14 @@ package com.mercadona.mercadona_caducados.application;
 import com.mercadona.mercadona_caducados.application.dto.TornilloConProductoDTO;
 import com.mercadona.mercadona_caducados.domain.model.Tornillo;
 import com.mercadona.mercadona_caducados.domain.repository.TornilloRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Comparator;
+import java.time.LocalDate;
 
 @Service
 public class TornilloService {
@@ -62,4 +64,18 @@ public class TornilloService {
     public Optional<TornilloConProductoDTO> obtenerDTOPorTiendaYProducto(Integer tiendaId, Integer productoCodigo) {
          return tornilloRepository.obtenerDTOPorTiendaYProducto(tiendaId, productoCodigo);
     }
+
+    // NUEVO: actualizar fecha de caducidad (formato "YYYY-MM-DD")
+    @Transactional
+    public void actualizarFechaCaducidad(Long id, String fechaYmd) {
+        if (fechaYmd == null || !fechaYmd.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            throw new IllegalArgumentException("Formato de fecha inválido. Use YYYY-MM-DD.");
+        }
+        LocalDate nueva = LocalDate.parse(fechaYmd);
+        // Verifica existencia para devolver mensaje limpio si no existe
+        tornilloRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tornillo no encontrado: " + id));
+        tornilloRepository.updateFechaCaducidad(id, nueva);
+    }
+
 }

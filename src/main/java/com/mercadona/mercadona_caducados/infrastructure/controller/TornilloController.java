@@ -101,5 +101,15 @@ public class TornilloController {
         public void setFechaCaducidad(String fechaCaducidad) { this.fechaCaducidad = fechaCaducidad; }
     }
 
+    @GetMapping("/dto/tienda/{tiendaId}/familia/{familia}/caducados")
+public List<TornilloConProductoDTO> obtenerCaducados(
+        @PathVariable int tiendaId,
+        @PathVariable String familia,
+        @RequestParam(value = "modulo", required = false) String nombreModulo
+) {
+    return tornilloService.obtenerCaducadosDTO(tiendaId, familia, nombreModulo);
+}
+
+
 
 }

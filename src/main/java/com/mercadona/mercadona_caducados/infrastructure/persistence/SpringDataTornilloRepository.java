@@ -44,12 +44,15 @@ public interface SpringDataTornilloRepository extends JpaRepository<TornilloEnti
         @Param("familia") String familia
     );
 
+    // ===== DTOs con join a Producto, incluyendo familia y caducidadDias =====
+
     @Query("""
         SELECT new com.mercadona.mercadona_caducados.application.dto.TornilloConProductoDTO(
-            t.id, t.productoCodigo, t.tiendaId, 
-            CAST(t.fechaCaducidad AS string), CAST(t.fechaRetirada AS string), 
-            t.nombreModulo, t.fila, t.columna, 
-            p.nombre, p.imagenUrl
+            t.id, t.productoCodigo, t.tiendaId,
+            CAST(t.fechaCaducidad AS string), CAST(t.fechaRetirada AS string),
+            t.nombreModulo, t.fila, t.columna,
+            p.nombre, p.imagenUrl,
+            p.familia, p.caducidadDias
         )
         FROM TornilloEntity t
         JOIN ProductoEntity p ON t.productoCodigo = p.codigo
@@ -70,7 +73,8 @@ public interface SpringDataTornilloRepository extends JpaRepository<TornilloEnti
             t.id, t.productoCodigo, t.tiendaId,
             CAST(t.fechaCaducidad AS string), CAST(t.fechaRetirada AS string),
             t.nombreModulo, t.fila, t.columna,
-            p.nombre, p.imagenUrl
+            p.nombre, p.imagenUrl,
+            p.familia, p.caducidadDias
         )
         FROM TornilloEntity t
         JOIN ProductoEntity p ON t.productoCodigo = p.codigo
@@ -81,5 +85,47 @@ public interface SpringDataTornilloRepository extends JpaRepository<TornilloEnti
         @Param("productoCodigo") Integer productoCodigo
     );
 
+    // 3) Caducados por tienda + familia
+    @Query("""
+      SELECT new com.mercadona.mercadona_caducados.application.dto.TornilloConProductoDTO(
+          t.id, t.productoCodigo, t.tiendaId,
+          CAST(t.fechaCaducidad AS string), CAST(t.fechaRetirada AS string),
+          t.nombreModulo, t.fila, t.columna,
+          p.nombre, p.imagenUrl,
+          p.familia, p.caducidadDias
+      )
+      FROM TornilloEntity t
+      JOIN ProductoEntity p ON t.productoCodigo = p.codigo
+      WHERE t.tiendaId = :tiendaId
+        AND p.familia = :familia
+        AND t.fechaRetirada < CURRENT_DATE
+      ORDER BY t.fechaRetirada ASC, t.nombreModulo ASC, t.fila ASC, t.columna ASC
+    """)
+    List<TornilloConProductoDTO> findDTOCaducadosByTiendaIdAndFamilia(
+        @Param("tiendaId") int tiendaId,
+        @Param("familia") String familia
+    );
 
+    // 4) Caducados por tienda + familia + módulo
+    @Query("""
+      SELECT new com.mercadona.mercadona_caducados.application.dto.TornilloConProductoDTO(
+          t.id, t.productoCodigo, t.tiendaId,
+          CAST(t.fechaCaducidad AS string), CAST(t.fechaRetirada AS string),
+          t.nombreModulo, t.fila, t.columna,
+          p.nombre, p.imagenUrl,
+          p.familia, p.caducidadDias
+      )
+      FROM TornilloEntity t
+      JOIN ProductoEntity p ON t.productoCodigo = p.codigo
+      WHERE t.tiendaId = :tiendaId
+        AND p.familia = :familia
+        AND t.nombreModulo = :nombreModulo
+        AND t.fechaRetirada < CURRENT_DATE
+      ORDER BY t.fechaRetirada ASC, t.fila ASC, t.columna ASC
+    """)
+    List<TornilloConProductoDTO> findDTOCaducadosByTiendaIdAndFamiliaAndNombreModulo(
+        @Param("tiendaId") int tiendaId,
+        @Param("familia") String familia,
+        @Param("nombreModulo") String nombreModulo
+    );
 }

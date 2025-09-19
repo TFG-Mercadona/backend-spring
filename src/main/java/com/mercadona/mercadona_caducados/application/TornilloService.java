@@ -7,9 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Comparator;
+import java.util.*;
+import java.util.stream.*;
 import java.time.LocalDate;
 
 @Service
@@ -77,5 +76,39 @@ public class TornilloService {
                 .orElseThrow(() -> new RuntimeException("Tornillo no encontrado: " + id));
         tornilloRepository.updateFechaCaducidad(id, nueva);
     }
+
+public List<TornilloConProductoDTO> obtenerCaducadosDTO(int tiendaId, String familia, String nombreModulo) {
+    List<TornilloConProductoDTO> base =
+        (nombreModulo == null || nombreModulo.isBlank())
+            ? tornilloRepository.findDTOCaducadosByTiendaIdAndFamilia(tiendaId, familia)
+            : tornilloRepository.findDTOCaducadosByTiendaIdAndFamiliaAndNombreModulo(tiendaId, familia, nombreModulo);
+
+    return ordenarZigZagPorModulo(base);
+}
+
+private List<TornilloConProductoDTO> ordenarZigZagPorModulo(List<TornilloConProductoDTO> items) {
+    // group by modulo
+    Map<String, List<TornilloConProductoDTO>> byModulo = items.stream()
+            .collect(Collectors.groupingBy(dto -> dto.nombreModulo));
+
+    // orden por módulo numérico (usa tu extraerNumeroModulo ya existente)
+    return byModulo.entrySet().stream()
+            .sorted(Comparator.comparingInt(e -> extraerNumeroModulo(e.getKey())))
+            .flatMap(e -> e.getValue().stream()
+                .sorted((a, b) -> {
+                    int cf = Integer.compare(a.fila, b.fila); // fila asc
+                    if (cf != 0) return cf;
+                    boolean odd = (a.fila % 2) != 0;          // impar: izq→der; par: der→izq
+                    return odd ? Integer.compare(a.columna, b.columna)
+                               : Integer.compare(b.columna, a.columna);
+                })
+            )
+            .collect(Collectors.toList());
+}
+
+
+
+
+
 
 }

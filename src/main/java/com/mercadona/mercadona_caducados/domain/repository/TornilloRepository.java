@@ -18,4 +18,6 @@ public interface TornilloRepository {
     Optional<TornilloConProductoDTO> obtenerDTOPorTiendaYProducto(Integer tiendaId, Integer productoCodigo);
     Optional<Tornillo> obtenerPorTiendaYProducto(Integer tiendaId, Integer productoCodigo);
     void updateFechaCaducidad(Long id, LocalDate nuevaFecha);
+    List<TornilloConProductoDTO> findDTOCaducadosByTiendaIdAndFamilia(int tiendaId, String familia);
+List<TornilloConProductoDTO> findDTOCaducadosByTiendaIdAndFamiliaAndNombreModulo(int tiendaId, String familia, String nombreModulo);
 }

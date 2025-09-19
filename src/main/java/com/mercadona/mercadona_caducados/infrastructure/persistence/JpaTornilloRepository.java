@@ -118,4 +118,15 @@ public class JpaTornilloRepository implements TornilloRepository {
         return d != null ? d.toString() : null;
     }
 
+    @Override
+public List<TornilloConProductoDTO> findDTOCaducadosByTiendaIdAndFamilia(int tiendaId, String familia) {
+    return springRepo.findDTOCaducadosByTiendaIdAndFamilia(tiendaId, familia);
+}
+
+@Override
+public List<TornilloConProductoDTO> findDTOCaducadosByTiendaIdAndFamiliaAndNombreModulo(int tiendaId, String familia, String nombreModulo) {
+    return springRepo.findDTOCaducadosByTiendaIdAndFamiliaAndNombreModulo(tiendaId, familia, nombreModulo);
+}
+
+
 }

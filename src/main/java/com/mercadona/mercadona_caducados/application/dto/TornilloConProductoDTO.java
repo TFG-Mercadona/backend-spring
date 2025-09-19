@@ -2,7 +2,7 @@ package com.mercadona.mercadona_caducados.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-@JsonInclude(JsonInclude.Include.NON_NULL) // para no enviar nulls si no los seteamos
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TornilloConProductoDTO {
     // Tornillo
     public Long id;
@@ -22,8 +22,13 @@ public class TornilloConProductoDTO {
     public String familia;
     public Integer caducidadDias;
 
-    public TornilloConProductoDTO(Long id, Integer productoCodigo, Integer tiendaId, String fechaCaducidad, String fechaRetirada,
-                                  String nombreModulo, Integer fila, Integer columna, String nombre, String imagenUrl) {
+    // Constructor “corto” (compatibilidad con llamadas existentes)
+    public TornilloConProductoDTO(
+            Long id, Integer productoCodigo, Integer tiendaId,
+            String fechaCaducidad, String fechaRetirada,
+            String nombreModulo, Integer fila, Integer columna,
+            String nombre, String imagenUrl
+    ) {
         this.id = id;
         this.productoCodigo = productoCodigo;
         this.tiendaId = tiendaId;
@@ -34,5 +39,19 @@ public class TornilloConProductoDTO {
         this.columna = columna;
         this.nombre = nombre;
         this.imagenUrl = imagenUrl;
+    }
+
+    // Constructor “completo” (incluye familia y caducidadDias)
+    public TornilloConProductoDTO(
+            Long id, Integer productoCodigo, Integer tiendaId,
+            String fechaCaducidad, String fechaRetirada,
+            String nombreModulo, Integer fila, Integer columna,
+            String nombre, String imagenUrl,
+            String familia, Integer caducidadDias
+    ) {
+        this(id, productoCodigo, tiendaId, fechaCaducidad, fechaRetirada,
+             nombreModulo, fila, columna, nombre, imagenUrl);
+        this.familia = familia;
+        this.caducidadDias = caducidadDias;
     }
 }

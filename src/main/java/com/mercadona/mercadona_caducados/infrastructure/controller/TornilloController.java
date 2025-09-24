@@ -137,6 +137,32 @@ public ResponseEntity<TornilloConProductoDTO> crearTornillo(@RequestBody CreateT
     return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 }
 
+@PutMapping("/{id}/posicion")
+public ResponseEntity<TornilloConProductoDTO> moverPosicion(
+        @PathVariable Long id,
+        @RequestBody MoverPosicionRequest req
+) {
+    if (req == null || req.getNombreModulo() == null || req.getFila() == null || req.getColumna() == null) {
+        throw new IllegalArgumentException("Body requerido: { nombreModulo, fila, columna }");
+    }
+    TornilloConProductoDTO dto = tornilloService.moverPosicion(id, req.getNombreModulo(), req.getFila(), req.getColumna());
+    return ResponseEntity.ok(dto);
+}
+
+/** Request body para mover posición */
+public static class MoverPosicionRequest {
+    private String nombreModulo;
+    private Integer fila;
+    private Integer columna;
+
+    public String getNombreModulo() { return nombreModulo; }
+    public void setNombreModulo(String nombreModulo) { this.nombreModulo = nombreModulo; }
+    public Integer getFila() { return fila; }
+    public void setFila(Integer fila) { this.fila = fila; }
+    public Integer getColumna() { return columna; }
+    public void setColumna(Integer columna) { this.columna = columna; }
+}
+
 
 
 }

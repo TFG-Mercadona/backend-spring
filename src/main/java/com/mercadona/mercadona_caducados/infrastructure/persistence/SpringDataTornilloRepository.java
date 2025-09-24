@@ -128,4 +128,13 @@ public interface SpringDataTornilloRepository extends JpaRepository<TornilloEnti
         @Param("familia") String familia,
         @Param("nombreModulo") String nombreModulo
     );
+
+    // en SpringDataTornilloRepository
+Optional<TornilloEntity> findByTiendaIdAndNombreModuloAndFilaAndColumna(
+        Integer tiendaId, String nombreModulo, Integer fila, Integer columna
+        
+);
+
+List<TornilloEntity> findAllByTiendaIdAndNombreModuloAndFilaAndColumna(
+        Integer tiendaId, String nombreModulo, Integer fila, Integer columna);
 }

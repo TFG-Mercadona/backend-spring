@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -254,6 +255,72 @@ public TornilloConProductoDTO crearTornilloBasico(CreateTornilloRequest req) {
             null,    // nombre
             null     // imagenUrl
     );
+}
+
+@Transactional
+public TornilloConProductoDTO moverPosicion(Long id, String nombreModulo, Integer fila, Integer columna) {
+    if (nombreModulo == null || nombreModulo.isBlank() || fila == null || columna == null) {
+        throw new IllegalArgumentException("nombreModulo, fila y columna son obligatorios");
+    }
+
+    TornilloEntity a = springTornillos.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tornillo no encontrado: " + id));
+
+    // Trae TODOS los ocupantes de la celda destino
+    List<TornilloEntity> ocupantes = springTornillos
+            .findAllByTiendaIdAndNombreModuloAndFilaAndColumna(a.getTiendaId(), nombreModulo, fila, columna);
+
+    // Si entre los ocupantes está el propio "a" (mismo sitio), es un no-op -> ok
+    boolean yaEstaEnSitio = ocupantes.stream().anyMatch(e ->
+            e.getId().equals(a.getId())
+            && Objects.equals(e.getNombreModulo(), nombreModulo)
+            && Objects.equals(e.getFila(), fila)
+            && Objects.equals(e.getColumna(), columna)
+    );
+    if (yaEstaEnSitio) {
+        return springTornillos.findDTOByTiendaIdAndProductoCodigo(a.getTiendaId(), a.getProductoCodigo())
+                .orElseThrow(() -> new IllegalStateException("No se pudo recuperar DTO"));
+    }
+
+    // Elige como “b” el ocupante distinto de "a" si lo hay
+    TornilloEntity b = ocupantes.stream()
+            .filter(e -> !e.getId().equals(a.getId()))
+            .findFirst()
+            .orElse(null);
+
+    // Si hay más de 1 distinto de "a", hay datos sucios -> reporta conflicto
+    long distintosDeA = ocupantes.stream().filter(e -> !e.getId().equals(a.getId())).count();
+    if (distintosDeA > 1) {
+        throw new ResponseStatusException(HttpStatus.CONFLICT,
+                "La celda destino está ocupada por múltiples tornillos. Limpia duplicados antes de organizar.");
+    }
+
+    if (b != null) {
+        // SWAP atómico
+        String oldModulo = a.getNombreModulo();
+        Integer oldFila = a.getFila();
+        Integer oldCol = a.getColumna();
+
+        a.setNombreModulo(nombreModulo);
+        a.setFila(fila);
+        a.setColumna(columna);
+
+        b.setNombreModulo(oldModulo);
+        b.setFila(oldFila);
+        b.setColumna(oldCol);
+
+        springTornillos.save(b);
+        springTornillos.save(a);
+    } else {
+        // mover simple a hueco vacío
+        a.setNombreModulo(nombreModulo);
+        a.setFila(fila);
+        a.setColumna(columna);
+        springTornillos.save(a);
+    }
+
+    return springTornillos.findDTOByTiendaIdAndProductoCodigo(a.getTiendaId(), a.getProductoCodigo())
+            .orElseThrow(() -> new IllegalStateException("No se pudo recuperar DTO tras mover tornillo"));
 }
     
 }

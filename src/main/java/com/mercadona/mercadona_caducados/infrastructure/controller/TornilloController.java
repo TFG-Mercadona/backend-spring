@@ -2,10 +2,16 @@ package com.mercadona.mercadona_caducados.infrastructure.controller;
 
 import com.mercadona.mercadona_caducados.application.TornilloService;
 import com.mercadona.mercadona_caducados.application.dto.TornilloConProductoDTO;
+import com.mercadona.mercadona_caducados.application.dto.UpdateTornilloBasicoRequest;
+import com.mercadona.mercadona_caducados.application.dto.CreateTornilloRequest;
 import com.mercadona.mercadona_caducados.domain.model.Tornillo;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -108,6 +114,27 @@ public List<TornilloConProductoDTO> obtenerCaducados(
         @RequestParam(value = "modulo", required = false) String nombreModulo
 ) {
     return tornilloService.obtenerCaducadosDTO(tiendaId, familia, nombreModulo);
+}
+
+// TornilloController.java (añadir)
+@PutMapping("/editar/{id}")
+public ResponseEntity<TornilloConProductoDTO> editarTornilloBasico(
+        @PathVariable Long id,
+        @RequestBody UpdateTornilloBasicoRequest req) {
+    TornilloConProductoDTO dto = tornilloService.editarTornilloBasico(id, req);
+    return ResponseEntity.ok(dto);
+}
+
+@DeleteMapping("/{id}")
+@ResponseStatus(HttpStatus.NO_CONTENT)
+public void eliminarTornillo(@PathVariable Long id) {
+    tornilloService.eliminarPorId(id);
+}
+
+@PostMapping
+public ResponseEntity<TornilloConProductoDTO> crearTornillo(@RequestBody CreateTornilloRequest req) {
+    TornilloConProductoDTO dto = tornilloService.crearTornilloBasico(req);
+    return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 }
 
 

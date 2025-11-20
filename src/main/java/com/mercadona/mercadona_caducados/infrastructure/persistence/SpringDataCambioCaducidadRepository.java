@@ -12,7 +12,6 @@ import java.util.List;
 public interface SpringDataCambioCaducidadRepository
         extends JpaRepository<TornilloCambioCaducidadEntity, Long> {
 
-    // ya podías tener estos dos:
     List<TornilloCambioCaducidadEntity> findByTiendaIdAndFechaCambioBetween(
             Integer tiendaId, LocalDateTime desde, LocalDateTime hasta);
 
